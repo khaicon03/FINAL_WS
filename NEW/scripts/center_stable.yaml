@@ -1,0 +1,34 @@
+scan_topic: /scan
+cmd_topic: /cmd_vel
+
+wheelbase: 0.24
+speed: 0.25
+v0: 0.2
+
+# Nếu chưa đo gì thêm, để 0 vẫn chạy
+laser_x: 0.0
+laser_y: 0.0
+laser_yaw: 0.0
+
+# Nếu bạn đo được: rear axle nằm sau LiDAR bao nhiêu (m) thì x_ref = -rear_to_laser
+x_ref: 0.0
+y_ref: 0.0
+
+r_min: 0.2
+r_max: 6.0
+left_deg_min: 40.0
+left_deg_max: 140.0
+right_deg_min: -140.0
+right_deg_max: -40.0
+
+ransac_thresh: 0.03
+ransac_iters: 80
+min_inliers: 40
+
+k_y: 1.5
+k_psi: 2.0
+
+delta_max: 0.45
+omega_max: 2.0
+
+ema_alpha: 0.55

@@ -1,0 +1,43 @@
+<launch>
+  <node pkg="rosserial_python" type="serial_node.py" name="stm32_serial">
+    <param name="port" value="/dev/ttyUSB1"/>
+    <param name="baud" value="115200"/>
+  </node>
+
+  <param name="robot_description"
+         command="$(find xacro)/xacro $(find field_robot_description)/urdf/field_robot.urdf.xacro" />
+
+  <!-- robot_state_publisher -->
+  <node pkg="robot_state_publisher" type="robot_state_publisher"
+        name="robot_state_publisher" output="screen">
+    <param name="publish_frequency" value="50.0"/>
+  </node>
+
+  <node pkg="rplidar_ros" type="rplidarNode" name="rplidar" output="screen">
+    <param name="serial_port" value="/dev/ttyUSB0"/>
+    <param name="serial_baudrate" value="115200"/>
+    <param name="frame_id" value="laser_link"/>
+    <param name="inverted" value="false"/>
+    <param name="angle_compensate" value="true"/>
+  </node>
+  
+  <!-- Wheel encoder -> Odometry (python node) -->
+  <node pkg="field_robot_missions" type="waypoint_follower.py" name="encoder_odom_node" output="screen">
+    <param name="wheel_radius" value="0.0325"/>
+    <param name="ticks_per_rev" value="1332"/>     <!-- 333 * 4 -->
+    <param name="encoder_sign" value="1.0"/>
+    <param name="yaw_sign" value="1.0"/>
+    <param name="odom_frame" value="odom"/>
+    <param name="base_frame" value="base_link"/>
+    <param name="odom_topic" value="wheel_odom"/>
+  </node>
+ 
+  <!-- SLAM -->
+  <include file="$(find field_robot_slam)/launch/gmapping.launch"/>
+  
+  <!-- Navigation -->
+  <include file="$(find field_robot_nav)/launch/move_base_dwa.launch"/>
+ 
+ 
+  
+</launch>

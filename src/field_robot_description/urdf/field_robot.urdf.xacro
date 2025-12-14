@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="field_robot">
+
+  <!-- Kích thước khung xe gần giống xe thật -->
+  <xacro:property name="base_len" value="0.26"/>   <!-- chiều dài ~26 cm -->
+  <xacro:property name="base_wid" value="0.18"/>   <!-- chiều rộng ~18 cm -->
+  <xacro:property name="base_h"   value="0.10"/>   <!-- chiều cao thân ~10 cm -->
+
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0 0 0.03" rpy="0 0 0"/>
+      <mass value="12.0"/>
+      <inertia ixx="0.2" ixy="0" ixz="0" iyy="0.2" iyz="0" izz="0.3"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 ${base_h/2.0}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${base_len} ${base_wid} ${base_h}"/>
+      </geometry>
+      <material name="orange">
+        <color rgba="0.9 0.4 0.1 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 ${base_h/2.0}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${base_len} ${base_wid} ${base_h}"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="base_footprint"/>
+  <joint name="base_footprint_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+  </joint>
+
+  <!-- RPLIDAR A1 trên tầng trên, hơi nhô ra phía trước -->
+  <link name="laser_link">
+    <visual>
+      <origin xyz="0.11 0 ${base_h + 0.07}" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.05" radius="0.05"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0.1 0.1 0.1 1.0"/>
+      </material>
+    </visual>
+  </link>
+  <joint name="laser_joint" type="fixed">
+    <origin xyz="0.11 0 ${base_h + 0.07}" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="laser_link"/>
+  </joint>
+
+  <!-- IMU (MPU6050) gần Jetson -->
+  <link name="imu_link">
+    <visual>
+      <origin xyz="0 0 ${base_h + 0.04}" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.03 0.03 0.02"/>
+      </geometry>
+      <material name="green">
+        <color rgba="0.1 0.8 0.1 1.0"/>
+      </material>
+    </visual>
+  </link>
+  <joint name="imu_joint" type="fixed">
+    <origin xyz="0 0 ${base_h + 0.04}" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="imu_link"/>
+  </joint>
+
+</robot>

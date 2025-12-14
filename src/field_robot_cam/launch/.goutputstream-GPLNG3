@@ -1,0 +1,72 @@
+<launch>
+  <node pkg="rosserial_python" type="serial_node.py" name="stm32_serial">
+    <param name="port" value="/dev/ttyUSB1"/>
+    <param name="baud" value="115200"/>
+    </node>
+
+  <param name="robot_description"
+         command="$(find xacro)/xacro $(find field_robot_description)/urdf/field_robot.urdf.xacro" />
+
+  <node pkg="robot_state_publisher" type="robot_state_publisher"
+        name="robot_state_publisher" output="screen">
+    <param name="publish_frequency" value="50.0"/>
+  </node>
+
+  <node pkg="rplidar_ros" type="rplidarNode" name="rplidar" output="screen">
+    <param name="serial_port" value="/dev/ttyUSB0"/>
+    <param name="serial_baudrate" value="115200"/>
+    <param name="frame_id" value="laser_link"/>
+    <param name="inverted" value="false"/>
+    <param name="angle_compensate" value="true"/>
+  </node>
+  
+  <node pkg="field_robot_missions" type="waypoint_follower.py" name="encoder_odom_node" output="screen">
+    <param name="wheel_radius" value="0.0325"/>
+    <param name="ticks_per_rev" value="1332"/>
+    <param name="encoder_sign" value="1.0"/>
+    <param name="yaw_sign" value="1.0"/>
+    <param name="odom_frame" value="odom"/>
+    <param name="base_frame" value="base_link"/>
+    <param name="odom_topic" value="wheel_odom"/>
+  </node>
+ 
+  <include file="$(find field_robot_slam)/launch/gmapping.launch"/>
+  
+  <include file="$(find field_robot_nav)/launch/move_base_dwa.launch">
+      <arg name="cmd_vel_topic" value="/cmd_vel_nav" /> 
+      </include>
+ 
+  <node pkg="field_robot_cam" type="imx_219.py" name="imx219_camera" output="screen">
+    <param name="sensor_id" value="0" />
+    <param name="capture_width" value="1280" />
+    <param name="capture_height" value="720" />
+    <param name="display_width" value="640" />
+    <param name="display_height" value="480" />
+    <param name="framerate" value="30" />
+    <param name="flip_method" value="0" />
+  </node>
+
+  <node pkg="field_robot_cam" type="cam.py" name="cam" output="screen">
+    <param name="image_topic" value="/camera/image_raw" />
+    <param name="show_debug" value="true" />        
+
+    <param name="forward_speed" value="0.25"/>
+    <param name="left_target_ratio"  value="0.30"/>
+    <param name="right_target_ratio" value="0.70"/>
+    <param name="center_ratio"       value="0.50"/>
+
+    <param name="left_min_x_ratio"  value="0.05"/>
+    <param name="left_max_x_ratio"  value="0.45"/>
+    <param name="right_min_x_ratio" value="0.55"/>
+    <param name="right_max_x_ratio" value="0.95"/>
+
+    <param name="k_ang" value="2.0"/>
+    <param name="max_ang" value="1.0"/>
+    
+    <remap from="/cmd_vel" to="/cmd_vel_row" />
+  </node>
+  
+  <node pkg="field_robot_cam" type="mode_manager.py" name="cmd_vel_mux" output="screen">
+      </node>
+
+</launch>

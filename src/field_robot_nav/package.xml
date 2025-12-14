@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>field_robot_nav</name>
+  <version>0.0.1</version>
+  <description>Navigation (EKF + move_base + TEB)</description>
+
+  <maintainer email="you@todo.todo">Your Name</maintainer>
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <exec_depend>robot_localization</exec_depend>
+  <exec_depend>move_base</exec_depend>
+  <exec_depend>costmap_2d</exec_depend>
+  <exec_depend>global_planner</exec_depend>
+  <exec_depend>teb_local_planner</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>nav_msgs</exec_depend>
+  <exec_depend>actionlib</exec_depend>
+  <exec_depend>move_base_msgs</exec_depend>
+</package>

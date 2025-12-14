@@ -1,0 +1,8 @@
+prefix=/home/chunnee/test/devel
+
+Name: field_robot_slam
+Description: Description of field_robot_slam
+Version: 0.0.1
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

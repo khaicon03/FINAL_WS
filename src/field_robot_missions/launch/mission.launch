@@ -1,0 +1,6 @@
+<launch>
+  <node pkg="field_robot_missions" type="waypoint_follower.py" name="waypoint_follower" output="screen">
+    <rosparam command="load" file="$(find field_robot_missions)/config/waypoints.yaml"/>
+    <param name="frame_id" value="map"/>
+  </node>
+</launch>

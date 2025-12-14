@@ -1,0 +1,8 @@
+prefix=/home/chunnee/test/install
+
+Name: field_robot_missions
+Description: Description of field_robot_missions
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

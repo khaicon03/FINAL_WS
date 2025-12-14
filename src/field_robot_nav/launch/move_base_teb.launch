@@ -1,0 +1,13 @@
+<launch>
+  <node pkg="move_base" type="move_base" name="move_base" output="screen">
+    <param name="base_global_planner" value="global_planner/GlobalPlanner"/>
+    <param name="base_local_planner"  value="teb_local_planner/TebLocalPlannerROS"/>
+    
+     <rosparam file="$(find field_robot_nav)/config/costmap_common_params.yaml" command="load" ns="global_costmap"/>
+    <rosparam file="$(find field_robot_nav)/config/costmap_common_params.yaml" command="load" ns="local_costmap"/>
+    <rosparam file="$(find field_robot_nav)/config/local_costmap_params.yaml" command="load"/>
+    <rosparam file="$(find field_robot_nav)/config/global_costmap_params.yaml" command="load"/>
+    <rosparam file="$(find field_robot_nav)/config/teb_local_planner_params.yaml" command="load"/>
+
+  </node>
+</launch>

@@ -1,0 +1,19 @@
+maxUrange: 6.0
+maxRange: 7.0
+minimumScore: 50
+linearUpdate: 0.15
+angularUpdate: 0.10
+temporalUpdate: 1.0
+
+xmin: -30.0
+ymin: -30.0
+xmax: 30.0
+ymax: 30.0
+delta: 0.05
+
+particles: 40
+occ_thresh: 0.25
+
+base_frame: base_link
+odom_frame: odom
+map_frame: map

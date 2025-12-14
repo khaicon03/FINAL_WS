@@ -1,0 +1,30 @@
+frequency: 30
+two_d_mode: true
+publish_tf: true
+
+
+map_frame: map
+odom_frame: odom
+base_link_frame: base_link
+world_frame: odom 
+
+
+odom0: /odom
+
+odom0_config: [false, false, false,
+               false, false, false,
+               true,  false, false,
+               false, false, true,
+               false, false, false]
+odom0_differential: false # S? d?ng giá tr? tuy?t ??i
+
+# --- C?U HÌNH IMU ---
+imu0: /imu/data
+# S? d?ng H??ng Yaw (Yaw Orientation), V?n t?c góc Yaw (Angular Velocity Yaw), và Gia t?c tuy?n tính X (Linear Acceleration X)
+# Các v? trí t??ng ?ng: [Yaw, VYaw, Ax] = [6, 12, 13]
+imu0_config: [false, false, false,
+               false, false, false, # Yaw (H??ng)
+               false, false, false,
+               false, false, false, # T?c ?? góc Yaw
+               true,  false, false] # Gia t?c X
+imu0_differential: false # S? d?ng giá tr? tuy?t ??i

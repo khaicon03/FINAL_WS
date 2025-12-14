@@ -1,0 +1,8 @@
+prefix=/home/chunnee/test/install
+
+Name: field_robot_nav
+Description: Description of field_robot_nav
+Version: 0.0.1
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

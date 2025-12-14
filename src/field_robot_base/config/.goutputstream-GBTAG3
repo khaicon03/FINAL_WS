@@ -1,0 +1,30 @@
+frequency: 30
+
+two_d_mode: true
+
+publish_tf: true
+
+map_frame: map
+odom_frame: odom
+base_link_frame: base_link
+world_frame: odom
+
+
+odom0: /odom
+odom0_config: [true, true, false,
+               false, false, false,
+               true,  false, false,   # vx
+               false, false, true,
+               false, false, false]
+odom0_differential: false
+
+imu0: /imu/data
+imu0_config: [false, false, false,
+              false, false, false,   
+              false, false, false,
+              false, false, true,    # wz
+              true,  false, false]   # ax (tu?)
+imu0_differential: false
+
+
+

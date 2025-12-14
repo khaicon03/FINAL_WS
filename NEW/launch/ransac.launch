@@ -1,0 +1,25 @@
+<launch>
+    <!-- node kết nối đến drver-->
+  <node pkg="rosserial_python" type="serial_node.py" name="stm32_serial">
+    <param name="port" value="/dev/ttyUSB1"/>
+    <param name="baud" value="115200"/>
+  </node>
+
+    <!-- node nhận dữ liệu lidar-->
+  <node pkg="rplidar_ros" type="rplidarNode" name="rplidar" output="screen">
+    <param name="serial_port" value="/dev/ttyUSB0"/>
+    <param name="serial_baudrate" value="115200"/>
+    <param name="frame_id" value="laser_link"/>
+    <param name="inverted" value="false"/>
+    <param name="angle_compensate" value="true"/>
+  </node>
+
+  <!-- 2) Corridor centering node -->
+  <node pkg="ransac" type="test.py" name="corridor_center" output="screen">
+    <rosparam command="load" file="$(find your_pkg)/config/test.yaml" />
+    <!-- đảm bảo node đọc đúng topic scan -->
+    <param name="scan_topic" value="/scan"/>
+    <param name="cmd_topic" value="/cmd_vel"/>
+  </node>
+
+</launch>

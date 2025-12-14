@@ -1,0 +1,26 @@
+scan_topic: /scan
+cmd_topic: /cmd_vel
+
+pwm_fwd: 0.20
+delta_max: 0.523599  # 30deg
+steer_sign: 1.0      # đổi -1 nếu đánh lái ngược
+
+r_min: 0.2
+r_max: 6.0
+left_deg_min: 40
+left_deg_max: 140
+right_deg_min: -140
+right_deg_max: -40
+
+ransac_thresh: 0.03
+ransac_iters: 80
+min_inliers: 40
+
+k_y: 1.5
+k_psi: 2.0
+ema_alpha: 0.55
+
+# Nếu bạn đo được: tâm trục sau nằm sau lidar bao nhiêu mét (rear_to_lidar)
+# x_ref: -rear_to_lidar
+x_ref: 0.0
+y_ref: 0.0

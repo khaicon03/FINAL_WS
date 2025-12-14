@@ -1,0 +1,8 @@
+prefix=/home/chunnee/test/devel
+
+Name: field_robot_cam
+Description: Description of field_robot_cam
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
