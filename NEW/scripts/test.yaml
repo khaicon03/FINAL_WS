@@ -1,16 +1,22 @@
 scan_topic: /scan
 cmd_topic: /cmd_vel
 
-pwm_fwd: 0.20
-delta_max: 0.523599  # 30deg
+speed: 0.20
+delta_max: 0.3  # 30deg
 steer_sign: 1.0      # đổi -1 nếu đánh lái ngược
 
 r_min: 0.2
-r_max: 6.0
+r_max: 1.0
 left_deg_min: 40
 left_deg_max: 140
 right_deg_min: -140
 right_deg_max: -40
+
+# thiết lập khoảng cách an toàn trước mặt LIDAR
+stop_deg_min: -140
+stop_deg_max: 140
+stop_dist: 0.15
+stop_min_points: 3
 
 ransac_thresh: 0.03
 ransac_iters: 80
