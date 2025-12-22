@@ -12,12 +12,6 @@ left_deg_max: 140
 right_deg_min: -140
 right_deg_max: -40
 
-# thiết lập khoảng cách an toàn trước mặt LIDAR
-stop_deg_min: -140
-stop_deg_max: 140
-stop_dist: 0.15
-stop_min_points: 3
-
 ransac_thresh: 0.03
 ransac_iters: 80
 min_inliers: 40
@@ -30,3 +24,6 @@ ema_alpha: 0.55
 # x_ref: -rear_to_lidar
 x_ref: 0.0
 y_ref: 0.0
+
+# cài đặt khoảng cách với luống 
+single_wall_targe: 0.3

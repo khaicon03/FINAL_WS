@@ -111,13 +111,6 @@ class CorridorCenterCmdVel(object):
         self.scan_topic = rospy.get_param("~scan_topic", "/scan")
         self.cmd_topic = rospy.get_param("~cmd_topic", "/cmd_vel")
 
-        # đặt thời gian dừng và cờ báo 
-        self.stop_before_rev = 2
-
-        self.stop_until = rospy.Time(0)
-        self.pending_reverse = False   # đã trigger và đang đợi hết 2s để chuyển
-        self.reversed = False          # đã chuyển sang lùi rồi thì giữ luôn
-
         # Driver của bạn: linear.x là PWM [-1..1]
         self.speed = float(rospy.get_param("~speed", 0.20))
         self.pwm_min = float(rospy.get_param("~pwm_min", 0.05))
@@ -137,7 +130,7 @@ class CorridorCenterCmdVel(object):
         # Emergency stop in front sector
         self.stop_deg_min = float(rospy.get_param("~stop_deg_min", -140.0))
         self.stop_deg_max = float(rospy.get_param("~stop_deg_max", 140.0))
-        self.stop_dist = float(rospy.get_param("~stop_dist", 0.15))
+        self.stop_dist = float(rospy.get_param("~stop_dist", 0.25))
         self.stop_min_points = int(rospy.get_param("~stop_min_points", 3))
 
 
@@ -184,36 +177,25 @@ class CorridorCenterCmdVel(object):
 
         pts = apply_tf_2d(pts, self.laser_x, self.laser_y, self.laser_yaw)
 
-        now = rospy.Time.now()
-
-        # Nếu đang trong thời gian dừng chờ 2s: đứng yên
-        if now < self.stop_until:
-            self.stop()
-            return
-
-        # Hết 2s và đang pending -> đảo chiều 1 lần
-        if self.pending_reverse and (now >= self.stop_until):
-            self.speed = -abs(self.speed)          # đảo speed để lùi
-            self.steer_sign = -self.steer_sign     # đảo steer_sign theo yêu cầu
-            self.pending_reverse = False
-            self.reversed = True
-            # (không return, cho phép chạy tiếp để lái lùi luôn)
-
-        # ===== Emergency trigger: obstacle in [-140, +140] deg within 0.15m =====
+        # ===== Emergency stop: sector [stop_deg_min .. stop_deg_max] with wrap support =====
         r_cf = np.linalg.norm(pts, axis=1)
         ang_cf_deg = np.degrees(np.arctan2(pts[:, 1], pts[:, 0]))
 
-        # sector [-140, +140]
-        sector_mask = (ang_cf_deg >= self.stop_deg_min) & (ang_cf_deg <= self.stop_deg_max) & np.isfinite(r_cf)
+        # Nếu min <= max: dùng AND bình thường (vd -140..140)
+        # Nếu min > max: nghĩa là sector "wrap" qua ±180 (vd 140..-140) => (>=140) OR (<=-140)
+        if self.stop_deg_min <= self.stop_deg_max:
+            sector_mask = (ang_cf_deg >= self.stop_deg_min) & (ang_cf_deg <= self.stop_deg_max)
+        else:
+            sector_mask = (ang_cf_deg >= self.stop_deg_min) | (ang_cf_deg <= self.stop_deg_max)
+
+        sector_mask = sector_mask & np.isfinite(r_cf)
         close_mask = sector_mask & (r_cf <= self.stop_dist)
 
-        # chỉ trigger khi chưa reverse (hoặc bạn muốn trigger cả lúc lùi thì bỏ điều kiện "not self.reversed")
-        if (not self.pending_reverse) and (not self.reversed) and (int(close_mask.sum()) >= self.stop_min_points):
-            self.stop_until = now + rospy.Duration(self.stop_before_rev)
-            self.pending_reverse = True
+        if int(close_mask.sum()) >= self.stop_min_points:
             self.stop()
             return
-        # ======================================================================
+        # ================================================================================ 
+
 
         ang_deg = np.degrees(np.arctan2(pts[:, 1], pts[:, 0]))
         left_pts = pts[(ang_deg >= self.left_deg_min) & (ang_deg <= self.left_deg_max)]
